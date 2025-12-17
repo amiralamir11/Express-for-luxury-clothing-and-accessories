@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="storeTitle">Express Shopping</title> 
+    <link rel="icon" id="favicon" href="https://via.placeholder.com/16x16?text=ES">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        /* ------------------------------------------------------------------------------------
+           CSS: التنسيقات العامة والمحسنة (نفس تنسيقاتك الأصلية دون تغيير)
+           ------------------------------------------------------------------------------------ */
+        :root {
+            --primary-color: #FF0050; 
+            --secondary-color: #FFC107; 
+            --dark-color: #333;
+            --light-color: #F8F8F8;
+            --white-color: #FFF;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+            --success-color: #28a745; 
+            --error-color: #dc3545; 
+            --contact-color: #3498db; 
+        }
+
+        a:focus, button:focus, input:focus, textarea:focus, *:focus:not([tabindex="-1"]) { outline: 3px solid var(--secondary-color); outline-offset: 2px; }
+        a, button, .like-container, .share-product-btn-footer { -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0; 
+            padding: 0; 
+            color: var(--dark-color); 
+            background-color: var(--light-color); 
+            min-height: 100vh;
+            overscroll-behavior-y: contain; 
+        }
+
+        /* ------------------- الرأسية (Header) ------------------- */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--white-color);
+            padding: 10px 15px;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            margin: 0; 
+            font-size: 1.5em; 
+            color: var(--primary-color);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .language-toggle button, .menu-toggle-btn {
+            background-color: var(--dark-color);
+            color: var(--white-color);
+            border: none;
+            padding: 8px 12px; 
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em; 
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .menu-toggle-btn {
+            font-size: 1.2em;
+            padding: 8px 12px;
+        }
+
+        .language-toggle button:hover, .menu-toggle-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        /* ------------------- القائمة الجانبية (Sidebar) ------------------- */
+        .sidebar {
+            display: none; 
+            height: auto; 
+            max-height: 100vh; 
+            width: 0; 
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            right: 0; 
+            background-color: #2c3e50; 
+            overflow-x: hidden;
+            transition: 0.3s; 
+            padding-bottom: 20px; 
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+            color: var(--white-color);
+            flex-direction: column;
+            box-sizing: border-box; 
+        }
+
+        .sidebar.is-open {
+            display: flex; 
+            width: 250px;
+        }
+
+        [dir="ltr"] .sidebar {
+            left: 0;
+            right: auto;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .sidebar-close-btn {
+            position: absolute;
+            top: 10px;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--white-color);
+            transition: 0.2s;
+            padding: 0 10px;
+        }
+
+        [dir="rtl"] .sidebar-close-btn { left: 15px; }
+        [dir="ltr"] .sidebar-close-btn { right: 15px; }
+
+        .sidebar-header {
+            padding: 20px 25px 10px;
+            padding-top: 70px; 
+            background-color: #34495e; 
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color); 
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-icon {
+            font-size: 3.5em;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .sidebar-username {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--white-color);
+        }
+
+        .sidebar-status {
+            font-size: 0.8em;
+            color: #bdc3c7;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-action-btn {
+            margin: 15px 20px 5px; 
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s, transform 0.2s;
+            flex-shrink: 0;
+            width: auto;
+            border: none;
+            cursor: pointer;
+        }
+        .sidebar-action-btn i {
+             margin-inline-end: 8px;
+        }
+        
+        #contactBtn.secondary-btn {
+            background-color: var(--contact-color);
+            color: var(--white-color);
+            margin-bottom: 20px;
+        }
+
+        #addProductBtn.primary-btn {
+            margin-top: 15px;
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            padding: 10px 25px;
+            font-size: 0.9em;
+            color: #bdc3c7;
+            border-bottom: 1px solid #34495e;
+            margin-top: 10px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+        
+        .sidebar .category-links-container {
+            flex-grow: 1; 
+            overflow-y: auto; 
+            margin-bottom: 10px;
+            padding-top: 5px;
+        }
+
+        .sidebar a, .sidebar button:not(.sidebar-action-btn) {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 1.1em;
+            color: var(--white-color);
+            display: block;
+            transition: 0.3s;
+            text-align: right;
+            border: none;
+            background: none;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: 500;
+        }
+
+        [dir="ltr"] .sidebar a, [dir="ltr"] .sidebar button:not(.sidebar-action-btn) { text-align: left; }
+
+        .sidebar a:hover, .sidebar button:hover:not(.sidebar-action-btn) {
+            background-color: #34495e;
+            color: var(--secondary-color);
+        }
+        
+        .sidebar a.active-category {
+            background-color: #34495e;
+            color: var(--secondary-color);
+            font-weight: bold;
+            border-inline-end: 5px solid var(--secondary-color);
+            position: relative;
+        }
+        [dir="ltr"] .sidebar a.active-category {
+            border-inline-start: 5px solid var(--secondary-color);
+            border-inline-end: none;
+        }
+        
+        /* ------------------- نماذج المنبثقة (Modals) ------------------- */
+         .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 3000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+            padding-top: 50px;
+        }
+
+        .modal-content {
+            background-color: var(--white-color);
+            margin: 5% auto; 
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%; 
+            max-width: 500px;
+            box-shadow: var(--shadow-heavy);
+            position: relative;
+        }
+
+        .modal-content input, .modal-content select, .modal-content textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        #insertBtn {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        #insertBtn.success {
+            background-color: var(--success-color); 
+        }
+
+        #password-container {
+            display: none; 
+            margin-top: 10px;
+        }
+
+        #password-container.visible {
+            display: block;
+        }
+
+        .close-modal {
+            color: #aaa;
+            position: absolute; 
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        [dir="rtl"] .close-modal { right: 15px; }
+        [dir="ltr"] .close-modal { left: 15px; }
+
+        /* ------------------- شبكة المنتجات ------------------- */
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            padding: 25px 15px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+
+        .product-card { 
+            background-color: var(--white-color); 
+            border-radius: 12px; 
+            box-shadow: var(--shadow-light); 
+            overflow: hidden; 
+            position: relative; 
+            border: 1px solid #eee; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+        
+        .product-card .product-image-main {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info { padding: 15px; flex-grow: 1; }
+        .product-name { font-size: 1.1em; margin: 0 0 5px 0; min-height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+        .product-price { font-size: 1.6em; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
+        
+        .product-actions { display: flex; gap: 5px; margin-top: 10px; }
+        .product-actions a, .product-actions button { padding: 8px; border-radius: 8px; border: none; cursor: pointer; flex-grow: 1; text-decoration: none; text-align: center; font-size: 0.8em; font-weight: bold;}
+        .buy-now-btn { background: var(--primary-color); color: white; }
+        .show-images-btn { background: var(--secondary-color); color: #333; }
+
+        /* ------------------- البانر ------------------- */
+        .promo-banner-section { 
+            height: 380px; 
+            max-width: 1200px; 
+            margin: 0 auto 25px auto;
+            background-size: cover; 
+            background-position: center;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .show-more-page-btn {
+            display: none; width: 200px; margin: 20px auto; padding: 10px; border-radius: 20px; background: #000; color: #fff; cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+            .product-card .product-image-main { height: 150px; }
+            .product-name { font-size: 0.9em; }
+            .product-price { font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="main-header">
+        <h2 class="header-title" id="headerTitle">Express Shopping</h2>
+        <div class="header-controls">
+            <div class="language-toggle">
+                <button id="toggleLangBtn">EN / AR</button> 
+            </div>
+             <button class="menu-toggle-btn" id="openMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <div id="mySidebar" class="sidebar">
+        <span class="sidebar-close-btn" id="closeMenuBtn">&times;</span>
+        <div class="sidebar-header">
+            <i class="fas fa-user-circle sidebar-user-icon"></i>
+            <h4 class="sidebar-username">لوحة التحكم</h4>
+        </div>
+        <button id="addProductBtn" class="sidebar-action-btn primary-btn"><i class="fas fa-plus-circle"></i> إضافة منتج</button>
+        <h4 class="sidebar-title">الفئات</h4>
+        <div class="category-links-container" id="categoryLinksContainer"></div>
+        <button id="contactBtn" class="sidebar-action-btn secondary-btn"><i class="fas fa-paper-plane"></i> تواصل</button>
+    </div>
+
+    <div id="addProductModal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" id="closeModalBtn">&times;</span>
+        <h3 id="modalTitle">إضافة منتج جديد</h3>
+        <form id="productForm">
+            <select id="productCategory" required>
+                <option value="فساتين">فساتين</option>
+                <option value="جاكيت">جاكيت</option>
+                <option value="بدلة اطفال">بدلة اطفال</option>
+                <option value="احذية">احذية</option>
+                <option value="ساعات">ساعات</option>
+                <option value="اكسسوارات">اكسسوارات</option>
+                <option value="مكياج">مكياج</option>
+                <option value="اخرى">أخرى</option>
+            </select>
+            <input type="text" id="productNameAr" placeholder="اسم المنتج بالعربي" required>
+            <input type="text" id="productSizesAr" placeholder="المقاسات بالعربي" required>
+            <input type="text" id="productNameEn" placeholder="Product Name (EN)" required>
+            <input type="text" id="productSizesEn" placeholder="Sizes (EN)" required>
+            <input type="number" id="productPrice" step="0.01" placeholder="Price $" required>
+            <input type="url" id="productImagesLink" placeholder="رابط الصور" required>
+            <input type="url" id="productLink" placeholder="رابط الشراء" required>
+            <input type="url" id="productImageUrl" placeholder="رابط الصورة الرئيسية" required>
+
+            <div class="modal-actions">
+                <button type="submit" id="insertBtn">إدراج</button>
+                <div id="password-container">
+                    <input type="password" id="password-input" placeholder="كلمة المرور" maxlength="8">
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <section class="promo-banner-section" id="promoBannerSection">
+        <div class="banner-content-wrapper">
+            <h1 class="banner-title" id="storeNameBanner">Express Shopping</h1>
+            <a href="#" class="banner-link-btn" id="getNowLink">احصل الآن</a>
+        </div>
+    </section>
+
+    <main class="products-container">
+        <div class="products-grid" id="categoryBlocksContainer"></div>
+    </main>
+    
+    <button class="show-more-page-btn" id="loadMoreBtn">عرض المزيد</button>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <script>
+        /* ====================================================================================
+           *** 🔑 إعدادات Firebase 🔑 ***
+           ==================================================================================== */
+        const firebaseConfig = {
+            apiKey: "AIzaSyAP8RWZdXy3RzS9gsZvfANyW1KEVgSheTo",
+            authDomain: "express-for-luxury-products.firebaseapp.com",
+            projectId: "express-for-luxury-products",
+            storageBucket: "express-for-luxury-products.firebasestorage.app",
+            messagingSenderId: "92621831338",
+            appId: "1:92621831338:web:c479787725b09207b8e4d3",
+            measurementId: "G-DYNB7STLK1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        /* ====================================================================================
+           *** 💡 بيانات المتجر والوظائف الأساسية 💡 ***
+           ==================================================================================== */
+        const PRODUCTS_PER_LOAD = 12;
+        const CORRECT_PASSWORD = '40044004';
+        let currentLang = 'ar';
+        let currentProductIndex = 0;
+        let currentCategory = 'all';
+        let productsData = []; 
+        let isPasswordCorrect = false;
+
+        const CATEGORIES_AR = { 'all': 'الكل', 'فساتين': 'فساتين', 'جاكيت': 'جاكيت', 'بدلة اطفال': 'بدلة اطفال', 'احذية': 'احذية', 'ساعات': 'ساعات', 'اكسسوارات': 'اكسسوارات', 'مكياج': 'مكياج', 'اخرى': 'اخرى' };
+        const CATEGORIES_EN = { 'all': 'All', 'فساتين': 'Dresses', 'جاكيت': 'Jackets', 'بدلة اطفال': 'Kids', 'احذية': 'Shoes', 'ساعات': 'Watches', 'اكسسوارات': 'Acc', 'مكياج': 'Makeup', 'اخرى': 'Others' };
+
+        // جلب البيانات من Firebase عند التشغيل
+        function fetchProductsFromFirebase() {
+            db.ref('products').on('value', (snapshot) => {
+                const data = snapshot.val();
+                let firebaseProducts = [];
+                if (data) {
+                    firebaseProducts = Object.values(data);
+                }
+                
+                // دمج البيانات الثابتة مع بيانات Firebase
+                productsData = [...firebaseProducts, ...ORIGINAL_PRODUCTS_DATA];
+                filterProducts(currentCategory, false);
+            });
+        }
+
+        const ORIGINAL_PRODUCTS_DATA = [
+            { id: 130, category: 'فساتين', name_ar: 'فستان حفلات بناتي', name_en: 'Princess Dress', price: 28.57, rating: 4.9, soldCount: 25000, likesCount: 4200, link_ar: 'https://s.click.aliexpress.com/e/_EyajuQM', link_en: 'https://s.click.aliexpress.com/e/_EyajuQM', sizes_ar: '5-9 سنوات', sizes_en: '5-9 Years', images: ['https://i.imgur.com/nWcGYVq.jpeg'] },
+            { id: 131, category: 'احذية', name_ar: 'حذاء رياضي عصري', name_en: 'Kids Shoes', price: 7.26, rating: 4.7, soldCount: 18000, likesCount: 2100, link_ar: 'https://s.click.aliexpress.com/e/_Ez7L3Io', link_en: 'https://s.click.aliexpress.com/e/_Ez7L3Io', sizes_ar: '25-34', sizes_en: '25-34', images: ['https://i.imgur.com/YbyQpLs.jpeg'] }
+            // يمكنك إضافة بقية منتجاتك الثابتة هنا
+        ];
+
+        function createProductCard(product) {
+            const name = currentLang === 'ar' ? product.name_ar : product.name_en;
+            const size = currentLang === 'ar' ? product.sizes_ar : product.sizes_en;
+            return `
+                <div class="product-card">
+                    <img src="${product.images[0]}" class="product-image-main">
+                    <div class="product-info">
+                        <h3 class="product-name">${name}</h3>
+                        <p style="font-size:0.8em; color:gray;">${size}</p>
+                        <div class="product-price">${product.price}$</div>
+                        <div class="product-actions">
+                            <a href="${product.link_ar}" target="_blank" class="buy-now-btn">شراء</a>
+                            <a href="${product.images[1] || product.link_ar}" target="_blank" class="show-images-btn">صور</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadProducts(reset = false) {
+            const container = document.getElementById('categoryBlocksContainer');
+            if (reset) { container.innerHTML = ''; currentProductIndex = 0; }
+            
+            const filtered = currentCategory === 'all' ? productsData : productsData.filter(p => p.category === currentCategory);
+            const toLoad = filtered.slice(currentProductIndex, currentProductIndex + PRODUCTS_PER_LOAD);
+            
+            toLoad.forEach(p => container.innerHTML += createProductCard(p));
+            currentProductIndex += toLoad.length;
+            
+            document.getElementById('loadMoreBtn').style.display = currentProductIndex < filtered.length ? 'block' : 'none';
+        }
+
+        function filterProducts(cat, close = true) {
+            currentCategory = cat;
+            loadProducts(true);
+            if(close) closeNav();
+            createCategoryLinks();
+        }
+
+        function createCategoryLinks() {
+            const container = document.getElementById('categoryLinksContainer');
+            container.innerHTML = '';
+            const cats = currentLang === 'ar' ? CATEGORIES_AR : CATEGORIES_EN;
+            for (let key in cats) {
+                const btn = document.createElement('button');
+                btn.textContent = cats[key];
+                if(key === currentCategory) btn.style.color = "var(--secondary-color)";
+                btn.onclick = () => filterProducts(key);
+                container.appendChild(btn);
+            }
+        }
+
+        // إدراج منتج جديد وحفظه في Firebase
+        document.getElementById('productForm').onsubmit = function(e) {
+            e.preventDefault();
+            if (!isPasswordCorrect) {
+                document.getElementById('password-container').classList.add('visible');
+                return;
+            }
+
+            const newProduct = {
+                id: Date.now(),
+                category: document.getElementById('productCategory').value,
+                name_ar: document.getElementById('productNameAr').value,
+                name_en: document.getElementById('productNameEn').value,
+                sizes_ar: document.getElementById('productSizesAr').value,
+                sizes_en: document.getElementById('productSizesEn').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                link_ar: document.getElementById('productLink').value,
+                images: [document.getElementById('productImageUrl').value, document.getElementById('productImagesLink').value]
+            };
+
+            // الحفظ في Firebase
+            db.ref('products/' + newProduct.id).set(newProduct)
+            .then(() => {
+                alert("تم الحفظ في السحابة بنجاح!");
+                document.getElementById('addProductModal').style.display = 'none';
+                this.reset();
+                isPasswordCorrect = false;
+                document.getElementById('password-container').classList.remove('visible');
+                document.getElementById('insertBtn').textContent = "إدراج";
+            });
+        };
+
+        // التحقق من كلمة المرور
+        document.getElementById('password-input').oninput = function() {
+            if (this.value === CORRECT_PASSWORD) {
+                isPasswordCorrect = true;
+                document.getElementById('insertBtn').textContent = "تحقق بنجاح - اضغط إدراج";
+                document.getElementById('insertBtn').style.background = "green";
+            }
+        };
+
+        // وظائف الواجهة
+        function openNav() { document.getElementById("mySidebar").style.display = "flex"; setTimeout(() => document.getElementById("mySidebar").classList.add('is-open'), 10); }
+        function closeNav() { document.getElementById("mySidebar").classList.remove('is-open'); setTimeout(() => document.getElementById("mySidebar").style.display = "none", 300); }
+        
+        document.getElementById('openMenuBtn').onclick = openNav;
+        document.getElementById('closeMenuBtn').onclick = closeNav;
+        document.getElementById('addProductBtn').onclick = () => { document.getElementById('addProductModal').style.display = 'block'; closeNav(); };
+        document.getElementById('closeModalBtn').onclick = () => document.getElementById('addProductModal').style.display = 'none';
+        document.getElementById('loadMoreBtn').onclick = () => loadProducts();
+
+        // التشغيل الأولي
+        window.onload = () => {
+            fetchProductsFromFirebase();
+            createCategoryLinks();
+        };
+    </script>
+</body>
+</html>
+
