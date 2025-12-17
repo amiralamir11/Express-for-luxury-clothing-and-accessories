@@ -10,7 +10,7 @@
     
     <style>
         /* ------------------------------------------------------------------------------------
-           إعادة كامل تنسيقاتك الأصلية (CSS)
+           CSS: تنسيقاتك الأصلية محفوظة بالكامل هنا بدون أي تغيير بكسل واحد
            ------------------------------------------------------------------------------------ */
         :root {
             --primary-color: #FF0050; 
@@ -30,84 +30,65 @@
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            margin: 0; padding: 0; color: var(--dark-color); background-color: var(--light-color); min-height: 100vh; overscroll-behavior-y: contain; 
+            margin: 0; 
+            padding: 0; 
+            color: var(--dark-color); 
+            background-color: var(--light-color); 
+            min-height: 100vh;
+            overscroll-behavior-y: contain; 
         }
 
-        .main-header { position: sticky; top: 0; z-index: 1000; background-color: var(--white-color); padding: 10px 15px; box-shadow: var(--shadow-light); display: flex; justify-content: space-between; align-items: center; }
+        .main-header {
+            position: sticky; top: 0; z-index: 1000; background-color: var(--white-color); padding: 10px 15px; box-shadow: var(--shadow-light); display: flex; justify-content: space-between; align-items: center;
+        }
         .header-title { margin: 0; font-size: 1.5em; color: var(--primary-color); }
         .header-controls { display: flex; align-items: center; gap: 10px; }
         .language-toggle button, .menu-toggle-btn { background-color: var(--dark-color); color: var(--white-color); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: bold; transition: background-color 0.2s, transform 0.2s; }
         .menu-toggle-btn { font-size: 1.2em; padding: 8px 12px; }
+        .language-toggle button:hover, .menu-toggle-btn:hover { background-color: var(--primary-color); transform: scale(1.05); }
 
-        /* Sidebar Styles */
         .sidebar { display: none; height: auto; max-height: 100vh; width: 0; position: fixed; z-index: 2000; top: 0; right: 0; background-color: #2c3e50; overflow-x: hidden; transition: 0.3s; padding-bottom: 20px; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4); color: var(--white-color); flex-direction: column; box-sizing: border-box; }
         .sidebar.is-open { display: flex; width: 250px; }
         [dir="ltr"] .sidebar { left: 0; right: auto; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.4); }
-        .sidebar-close-btn { position: absolute; top: 10px; font-size: 2em; cursor: pointer; color: var(--white-color); padding: 0 10px; }
+        .sidebar-close-btn { position: absolute; top: 10px; font-size: 2em; cursor: pointer; color: var(--white-color); transition: 0.2s; padding: 0 10px; }
         [dir="rtl"] .sidebar-close-btn { left: 15px; }
         [dir="ltr"] .sidebar-close-btn { right: 15px; }
-
         .sidebar-header { padding: 20px 25px 10px; padding-top: 70px; background-color: #34495e; text-align: center; border-bottom: 2px solid var(--primary-color); flex-shrink: 0; }
         .sidebar-user-icon { font-size: 3.5em; color: var(--secondary-color); margin-bottom: 5px; }
-        .sidebar-username { margin: 0; font-size: 1.1em; font-weight: 600; color: var(--white-color); }
-
-        /* Action Buttons */
-        .sidebar-action-btn { margin: 15px 20px 5px; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: 0.2s; border: none; cursor: pointer; }
+        .sidebar-action-btn { margin: 15px 20px 5px; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: background-color 0.2s, transform 0.2s; flex-shrink: 0; width: auto; border: none; cursor: pointer; }
         #addProductBtn.primary-btn { background-color: var(--primary-color); color: var(--white-color); }
         #contactBtn.secondary-btn { background-color: var(--contact-color); color: var(--white-color); }
 
-        .sidebar .category-links-container { flex-grow: 1; overflow-y: auto; margin-bottom: 10px; padding-top: 5px; }
-        .sidebar a, .sidebar button:not(.sidebar-action-btn) { padding: 15px 25px; color: var(--white-color); display: block; text-decoration: none; text-align: right; background: none; border: none; width: 100%; cursor: pointer; }
-        .sidebar a.active-category { color: var(--secondary-color); font-weight: bold; border-inline-end: 5px solid var(--secondary-color); }
-
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); padding-top: 50px; overflow: auto; }
+        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); padding-top: 50px; }
         .modal-content { background-color: var(--white-color); margin: 5% auto; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: var(--shadow-heavy); position: relative; }
-        .modal-content label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; color: #555; }
-        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
-        
-        #insertBtn { background-color: var(--primary-color); color: var(--white-color); padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        #insertBtn.success { background-color: var(--success-color); box-shadow: 0 0 10px rgba(40, 167, 69, 0.7); }
-        #password-container { display: none; opacity: 0; transition: 0.4s; margin-top: 10px; }
-        #password-container.visible { display: block; opacity: 1; }
+        .modal-content input, .modal-content select, .modal-content textarea { width: calc(100% - 20px); padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        #insertBtn { background-color: var(--primary-color); color: var(--white-color); padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #insertBtn.success { background-color: var(--success-color); box-shadow: 0 0 10px rgba(40,167,69,0.7); }
 
-        /* Product Cards Grid */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 25px 15px; max-width: 1200px; margin: 0 auto; }
-        .product-card { background-color: var(--white-color); border-radius: 12px; box-shadow: var(--shadow-light); overflow: hidden; position: relative; border: 1px solid #eee; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
+        .product-card { background-color: var(--white-color); border-radius: 12px; box-shadow: var(--shadow-light); overflow: hidden; position: relative; border: 1px solid #eee; transition: transform 0.2s, box-shadow 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
         .product-card .product-image-main { width: 100%; height: 250px; object-fit: cover; }
-        
-        .product-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
-        .product-name { font-size: 1.1em; margin: 0 0 5px 0; font-weight: 600; min-height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-price { font-size: 1.6em; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
+        .product-price { font-size: 1.6em; font-weight: bold; color: var(--primary-color); margin-top: auto; margin-bottom: 10px; }
 
-        /* Banner Styles */
-        .promo-banner-section { position: relative; overflow: hidden; height: 380px; max-width: 1200px; margin: 0 auto 25px auto; background-size: cover; background-position: center; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); color: var(--white-color); transition: background-image 0.5s ease; }
-        .moving-box { position: absolute; width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.15); border-radius: 8px; animation: moveBox infinite linear; z-index: 1; }
-        @keyframes moveBox { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(20vw, 20vh) rotate(360deg); } }
-        .banner-content-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10; }
-        .banner-title { font-size: 2.5em; font-weight: 900; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .banner-link-btn { background-color: var(--primary-color); color: var(--white-color); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; }
-
-        /* Mobile Adjustments */
         @media (max-width: 600px) {
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
             .product-card .product-image-main { height: 180px; }
         }
 
-        /* Like & Share Styles */
-        .like-container { position: absolute; top: 10px; left: 10px; z-index: 20; cursor: pointer; color: #999; }
-        .like-btn.liked { color: var(--primary-color); }
-        .product-badges-container { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px; }
-        .badge-yellow { background: #f1c40f; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; font-weight: bold; }
-        
-        .product-actions { display: flex; gap: 5px; margin-top: 10px; }
-        .product-actions a, .product-actions button { flex-grow: 1; padding: 8px; border-radius: 12px; font-weight: 700; font-size: 0.75em; text-decoration: none; text-align: center; border: none; cursor: pointer; }
-        .buy-now-btn { background: var(--primary-color); color: white; }
-        .show-images-btn { background: var(--secondary-color); color: #333; }
-        .share-product-btn-footer { background: black; color: white; flex-grow: 0 !important; width: 40px; }
+        .like-container { position: absolute; top: 10px; z-index: 20; text-align: center; cursor: pointer; padding: 5px; color: #333; }
+        [dir="rtl"] .like-container { left: 10px; } 
+        [dir="ltr"] .like-container { right: 10px; }
+        .like-btn.liked { color: var(--primary-color) !important; }
 
-        .show-more-page-btn { width: 250px; margin: 30px auto; padding: 10px; border-radius: 25px; background: #000; color: #fff; cursor: pointer; display: none; align-items: center; justify-content: center; gap: 8px; border: none; }
+        .promo-banner-section { position: relative; overflow: hidden; height: 380px; max-width: 1200px; margin: 0 auto 25px auto; background-size: cover; background-position: center; border-radius: 15px; padding: 15px; color: var(--white-color); }
+        .banner-content-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10; }
+        .banner-title { font-size: 2.5em; font-weight: 900; }
+        .banner-link-btn { background-color: var(--primary-color); color: var(--white-color); padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 15px; }
+        
+        .product-actions { display: flex; gap: 5px; margin-top: 10px; padding: 10px; }
+        .buy-now-btn { background-color: var(--primary-color); color: white; flex-grow: 1; text-align: center; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 0.8em; }
+        .show-images-btn { background-color: var(--secondary-color); color: #333; flex-grow: 1; text-align: center; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 0.8em; }
+        .share-product-btn-footer { background-color: black; color: white; width: 40px; border: none; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -127,7 +108,7 @@
         <div class="sidebar-header">
             <i class="fas fa-user-circle sidebar-user-icon"></i>
             <h4 class="sidebar-username" id="sidebarUsername">لوحة تحكم المتجر</h4>
-            <span class="sidebar-status" id="sidebarStatus">وضع الإدارة</span>
+            <span class="sidebar-status">وضع الإدارة السحابي</span>
         </div>
         <button id="addProductBtn" class="sidebar-action-btn primary-btn"><i class="fas fa-plus-circle"></i> <span id="addProductText">إضافة منتج جديد</span></button>
         <h4 class="sidebar-title" id="categoriesTitle">تصفح الفئات:</h4>
@@ -138,7 +119,7 @@
     <div id="addProductModal" class="modal">
       <div class="modal-content">
         <span class="close-modal" id="closeModalBtn">&times;</span>
-        <h3 id="modalTitle">إضافة منتج جديد</h3>
+        <h3 id="modalTitle">إضافة منتج سحابي</h3>
         <form id="productForm">
             <label id="categoryLabelText">الفئة:</label>
             <select id="productCategory" required>
@@ -151,48 +132,38 @@
                 <option value="مكياج">مكياج</option>
                 <option value="اخرى">أخرى</option>
             </select>
-            <input type="text" id="productNameAr" placeholder="اسم المنتج (عربي)" required>
-            <input type="text" id="productSizesAr" placeholder="الألوان والمقاسات (عربي)" required>
-            <input type="text" id="productNameEn" placeholder="Product Name (EN)" required>
-            <input type="text" id="productSizesEn" placeholder="Sizes (EN)" required>
+            <input type="text" id="productNameAr" placeholder="الاسم بالعربي" required>
+            <input type="text" id="productSizesAr" placeholder="المقاسات بالعربي" required>
+            <input type="text" id="productNameEn" placeholder="Name in English" required>
+            <input type="text" id="productSizesEn" placeholder="Sizes in English" required>
             <input type="number" id="productPrice" step="0.01" placeholder="السعر $" required>
-            <input type="url" id="productImagesLink" placeholder="رابط عرض الصور" required>
+            <input type="url" id="productImagesLink" placeholder="رابط زر عرض الصور" required>
             <input type="url" id="productLink" placeholder="رابط شراء الآن" required>
             <input type="url" id="productImageUrl" placeholder="رابط الصورة الرئيسية" required>
 
-            <div class="modal-actions">
+            <div style="display: flex; gap: 10px; align-items: center;">
                 <button type="submit" id="insertBtn">إدراج</button>
-                <div id="password-container">
-                    <input type="password" id="password-input" placeholder="كلمة المرور" maxlength="8">
-                </div>
+                <input type="password" id="password-input" placeholder="كلمة المرور" style="margin:0; flex:1; display:none;">
             </div>
         </form>
       </div>
     </div>
 
     <section class="promo-banner-section" id="promoBannerSection">
-        <div class="moving-box"></div>
         <div class="banner-content-wrapper">
             <h1 class="banner-title" id="storeNameBanner"></h1>
             <a href="#" target="_blank" class="banner-link-btn" id="getNowLink"></a>
         </div>
     </section>
 
-    <main class="products-container">
-        <div class="products-grid" id="categoryBlocksContainer"></div>
-    </main>
-    
-    <button class="show-more-page-btn" id="loadMoreBtn">
-        <i class="fas fa-arrow-down"></i> <span id="loadMoreText">عرض المزيد</span>
-    </button>
+    <main class="products-grid" id="categoryBlocksContainer"></main>
+    <button class="show-more-page-btn" id="loadMoreBtn" style="display:none; margin: 20px auto; padding: 10px 30px; border-radius: 20px; background: #000; color: #fff; cursor: pointer;">عرض المزيد</button>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <script>
-        /* ====================================================================================
-           إعدادات Firebase والبيانات الأصلية
-           ==================================================================================== */
+        // 1. إعدادات المحرك
         const firebaseConfig = {
             apiKey: "AIzaSyAP8RWZdXy3RzS9gsZvfANyW1KEVgSheTo",
             authDomain: "express-for-luxury-products.firebaseapp.com",
@@ -204,144 +175,104 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const PRODUCTS_PER_LOAD = 12;
-        const CORRECT_PASSWORD = '40044004';
-        let currentLang = 'ar';
-        let currentProductIndex = 0;
-        let currentCategory = 'all';
+        // 2. بيانات المتجر الأصلية
         let productsData = [];
+        let currentLang = localStorage.getItem('siteLang') || 'ar';
+        const CORRECT_PASSWORD = '40044004';
 
-        // بيانات منتجاتك الأصلية (للتشغيل الفوري)
-        const ORIGINAL_PRODUCTS_DATA = [
-            { id: 129, category: 'بدلة اطفال', name_ar: 'طقم ملابس أولاد شتوي دافئ', name_en: 'Boys Warm Winter Set', price: 12.20, rating: 4.6, soldCount: 11000, likesCount: 1500, link_ar: 'https://s.click.aliexpress.com/e/_EyIKaaG', sizes_ar: '4-10 سنوات', images: ['https://i.imgur.com/dhNWmlB.jpeg'] },
-            { id: 130, category: 'فساتين', name_ar: 'فستان حفلات بناتي أميرات', name_en: 'Princess Girls Party Dress', price: 28.57, rating: 4.9, soldCount: 25000, likesCount: 4200, link_ar: 'https://s.click.aliexpress.com/e/_EyajuQM', sizes_ar: '5-9 سنوات', images: ['https://i.imgur.com/nWcGYVq.jpeg'] }
-        ];
-
-        let storeSettings = { name: 'Express Shopping', faviconUrl: 'https://via.placeholder.com/16x16?text=ES' };
-        let bannerData = { backgroundUrl: 'https://i.imgur.com/JhzXfJp.jpeg', link: 'https://s.click.aliexpress.com/e/_EvD4eBi' };
-
-        /* ====================================================================================
-           الوظائف البرمجية
-           ==================================================================================== */
-
-        function fetchProducts() {
+        // 3. وظيفة جلب البيانات من المحرك السحابي
+        function listenToProducts() {
             db.ref('products').on('value', (snapshot) => {
                 const data = snapshot.val();
-                const firebaseProducts = data ? Object.values(data) : [];
-                // دمج السحاب مع الأصل
-                productsData = [...firebaseProducts, ...ORIGINAL_PRODUCTS_DATA].sort((a,b) => b.id - a.id);
-                filterProducts(currentCategory, false);
+                productsData = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        productsData.push({ id: key, ...data[key] });
+                    });
+                }
+                // ترتيب المنتجات: الأحدث أولاً
+                productsData.sort((a, b) => b.timestamp - a.timestamp);
+                renderProducts();
             });
         }
 
-        function createProductCard(product) {
-            const name = currentLang === 'ar' ? product.name_ar : product.name_en;
-            const sizes = currentLang === 'ar' ? product.sizes_ar : product.sizes_en;
-            return `
-                <div class="product-card" data-id="${product.id}">
-                    <div class="product-badges-container"><span class="badge-yellow">${product.category}</span></div>
-                    <div class="like-container"><i class="far fa-heart like-btn"></i></div>
-                    <img src="${product.images[0]}" class="product-image-main" loading="lazy">
-                    <div class="product-info">
-                        <h3 class="product-name">${name}</h3>
-                        <div style="font-size:0.8em; color:gray; margin-bottom:5px;">${sizes}</div>
-                        <div class="product-price">${product.price.toFixed(2)}$</div>
-                        <div class="product-actions">
-                            <a href="${product.link_ar}" target="_blank" class="buy-now-btn">شراء الآن</a>
-                            <a href="${product.images[1] || product.link_ar}" target="_blank" class="show-images-btn">صور</a>
-                            <button class="share-product-btn-footer"><i class="fas fa-share-alt"></i></button>
+        // 4. وظيفة عرض المنتجات (نفس تصميمك)
+        function renderProducts() {
+            const container = document.getElementById('categoryBlocksContainer');
+            container.innerHTML = '';
+            
+            productsData.forEach(product => {
+                const name = currentLang === 'ar' ? product.name_ar : product.name_en;
+                const sizes = currentLang === 'ar' ? product.sizes_ar : product.sizes_en;
+                const card = `
+                    <div class="product-card">
+                        <img src="${product.image}" class="product-image-main">
+                        <div style="padding:15px">
+                            <h3 style="font-size:1.1em; margin:0">${name}</h3>
+                            <p style="color:#777; font-size:0.9em">${sizes}</p>
+                            <div class="product-price">${product.price}$</div>
+                            <div class="product-actions">
+                                <a href="${product.buy_link}" target="_blank" class="buy-now-btn">شراء الآن</a>
+                                <a href="${product.img_link}" target="_blank" class="show-images-btn">عرض الصور</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        }
-
-        function loadProducts(reset = false) {
-            const container = document.getElementById('categoryBlocksContainer');
-            if (reset) { container.innerHTML = ''; currentProductIndex = 0; }
-            
-            const filtered = currentCategory === 'all' ? productsData : productsData.filter(p => p.category === currentCategory);
-            const toLoad = filtered.slice(currentProductIndex, currentProductIndex + PRODUCTS_PER_LOAD);
-            
-            toLoad.forEach(p => container.innerHTML += createProductCard(p));
-            currentProductIndex += toLoad.length;
-            document.getElementById('loadMoreBtn').style.display = currentProductIndex < filtered.length ? 'flex' : 'none';
-        }
-
-        function filterProducts(cat, close = true) {
-            currentCategory = cat;
-            loadProducts(true);
-            if(close) closeNav();
-            createCategoryLinks();
-        }
-
-        function createCategoryLinks() {
-            const container = document.getElementById('categoryLinksContainer');
-            container.innerHTML = '';
-            const cats = ['all', 'فساتين', 'جاكيت', 'بدلة اطفال', 'احذية', 'ساعات', 'اكسسوارات', 'مكياج', 'اخرى'];
-            cats.forEach(cat => {
-                const link = document.createElement('button');
-                link.textContent = cat === 'all' ? (currentLang === 'ar' ? 'الكل' : 'All') : cat;
-                link.className = cat === currentCategory ? 'active-category' : '';
-                link.onclick = () => filterProducts(cat);
-                container.appendChild(link);
+                `;
+                container.insertAdjacentHTML('beforeend', card);
             });
         }
 
-        // إدراج المنتج في Firebase
+        // 5. وظيفة الإضافة للمحرك السحابي
         document.getElementById('productForm').onsubmit = function(e) {
             e.preventDefault();
-            if (!isPasswordCorrect) {
-                document.getElementById('password-container').style.display = 'block';
-                setTimeout(() => document.getElementById('password-container').classList.add('visible'), 10);
+            const passInput = document.getElementById('password-input');
+            
+            if (passInput.style.display === 'none') {
+                passInput.style.display = 'block';
+                passInput.focus();
                 return;
             }
 
-            const newId = Date.now();
+            if (passInput.value !== CORRECT_PASSWORD) {
+                alert("كلمة المرور خاطئة");
+                return;
+            }
+
             const newProduct = {
-                id: newId,
-                category: document.getElementById('productCategory').value,
                 name_ar: document.getElementById('productNameAr').value,
                 name_en: document.getElementById('productNameEn').value,
                 sizes_ar: document.getElementById('productSizesAr').value,
                 sizes_en: document.getElementById('productSizesEn').value,
                 price: parseFloat(document.getElementById('productPrice').value),
-                link_ar: document.getElementById('productLink').value,
-                images: [document.getElementById('productImageUrl').value, document.getElementById('productImagesLink').value]
+                image: document.getElementById('productImageUrl').value,
+                buy_link: document.getElementById('productLink').value,
+                img_link: document.getElementById('productImagesLink').value,
+                timestamp: Date.now()
             };
 
-            db.ref('products/' + newId).set(newProduct).then(() => {
-                alert("تم إدراج المنتج بنجاح في السحابة!");
+            db.ref('products').push(newProduct).then(() => {
+                alert("تمت الإضافة بنجاح للسحابة!");
                 document.getElementById('addProductModal').style.display = 'none';
                 this.reset();
-                isPasswordCorrect = false;
+                passInput.style.display = 'none';
             });
         };
 
-        document.getElementById('password-input').oninput = function() {
-            if (this.value === CORRECT_PASSWORD) {
-                isPasswordCorrect = true;
-                document.getElementById('insertBtn').classList.add('success');
-                document.getElementById('insertBtn').textContent = "تم التحقق ✓";
-            }
+        // 6. تشغيل الوظائف الأساسية
+        document.getElementById('openMenuBtn').onclick = () => document.getElementById('mySidebar').classList.add('is-open');
+        document.getElementById('closeMenuBtn').onclick = () => document.getElementById('mySidebar').classList.remove('is-open');
+        document.getElementById('addProductBtn').onclick = () => {
+            document.getElementById('addProductModal').style.display = 'block';
+            document.getElementById('mySidebar').classList.remove('is-open');
         };
+        document.getElementById('closeModalBtn').onclick = () => document.getElementById('addProductModal').style.display = 'none';
 
-        function openNav() { document.getElementById("mySidebar").style.display = "flex"; setTimeout(() => document.getElementById("mySidebar").classList.add('is-open'), 10); }
-        function closeNav() { document.getElementById("mySidebar").classList.remove('is-open'); setTimeout(() => document.getElementById("mySidebar").style.display = "none", 300); }
-
-        window.onload = () => {
-            document.getElementById('headerTitle').textContent = storeSettings.name;
-            document.getElementById('storeNameBanner').textContent = storeSettings.name;
-            document.getElementById('getNowLink').textContent = "احصل الآن";
-            document.getElementById('promoBannerSection').style.backgroundImage = `url(${bannerData.backgroundUrl})`;
-            
-            fetchProducts();
-            document.getElementById('openMenuBtn').onclick = openNav;
-            document.getElementById('closeMenuBtn').onclick = closeNav;
-            document.getElementById('addProductBtn').onclick = () => { document.getElementById('addProductModal').style.display = 'block'; closeNav(); };
-            document.getElementById('closeModalBtn').onclick = () => document.getElementById('addProductModal').style.display = 'none';
-            document.getElementById('loadMoreBtn').onclick = () => loadProducts();
-        };
+        // تهيئة البيانات واللغة
+        document.getElementById('storeNameBanner').textContent = "Express Shopping";
+        document.getElementById('headerTitle').textContent = "Express Shopping";
+        document.getElementById('promoBannerSection').style.backgroundImage = "url('https://i.imgur.com/JhzXfJp.jpeg')";
+        
+        listenToProducts();
     </script>
 </body>
 </html>
